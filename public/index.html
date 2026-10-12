@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>7mody Proxy</title>
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: linear-gradient(135deg,#07111f,#123b62);
+}
+main {
+  width: min(85%, 480px);
+  padding: 30px;
+  text-align: center;
+  border: 1px solid #31536f;
+  border-radius: 24px;
+  background: #0d1d30;
+}
+h1 { color: #43e4d2; }
+p { color: #b6c7da; line-height: 1.8; }
+input, button {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin-top: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+input {
+  color: white;
+  background: #07111f;
+  border: 1px solid #31536f;
+  direction: ltr;
+}
+button {
+  border: 0;
+  background: #43e4d2;
+  color: #07111f;
+  font-weight: bold;
+  cursor: pointer;
+}
+#result { overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<main>
+  <h1>7mody Proxy</h1>
+  <p>أهلًا بك في موقعك الخاص</p>
+  <form id="proxyForm">
+    <input id="url" type="url" placeholder="https://example.com" required>
+    <button type="submit">Go</button>
+  </form>
+  <p id="result">أدخل رابط موقع عام يعمل عبر HTTPS.</p>
+</main>
+<script>
+document.getElementById("proxyForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const result = document.getElementById("result");
+  const url = document.getElementById("url").value.trim();
+  result.textContent = "جارٍ جلب عنوان الصفحة...";
+  try {
+    const response = await fetch("/api/fetch?url=" + encodeURIComponent(url));
+    const data = await response.text();
+    result.textContent = response.ok
+      ? "تم جلب المحتوى، لكن هذه النسخة لا تعرض الصفحة كاملة داخل الموقع."
+      : "تعذر جلب الصفحة. تحقق من الرابط أو جرّب موقعًا عامًا آخر.";
+  } catch {
+    result.textContent = "الخادم غير متصل أو لم يتم نشره بعد.";
+  }
+});
+</script>
+</body>
+</html>
